@@ -2,14 +2,14 @@
 
 //open database by mysqli
 $con = mysqli_connect("localhost", "root", "", "can302ass");
-//Á¬½ÓÖ÷»ú Ãû×Öroot ÃÜÂë¿Õ databaseµ½Ê±ºò¸Ä
+//è¿žæŽ¥ä¸»æœº åå­—root å¯†ç ç©º databaseåˆ°æ—¶å€™æ”¹
 if (mysqli_connect_errno($con)) { 
-    //Èç¹ûÁ¬½ÓÊ§°Ü¾ÍÏÔÊ¾Õâ¾ä»°
+    //å¦‚æžœè¿žæŽ¥å¤±è´¥å°±æ˜¾ç¤ºè¿™å¥è¯
     die("Connect to MySQL failed: " . mysqli_connect_error()); 
 }
 
 //a safe method to recieve post data
-function mypost($str) { //½ÓÊÕÊý¾ÝµÄ·½·¨
+function mypost($str) { //æŽ¥æ”¶æ•°æ®çš„æ–¹æ³•
     $val = !empty($_POST[$str]) ? $_POST[$str] : '';
     return $val;
 
@@ -18,7 +18,7 @@ function mypost($str) { //½ÓÊÕÊý¾ÝµÄ·½·¨
 
 
 
-//receive query parameters.×Ö¶Î µ½Ê±ºò¸Ä
+//receive query parameters.å­—æ®µ åˆ°æ—¶å€™æ”¹
 $user_id = mypost('user_id');
 $user_name = mypost('user_name');
 $coupon_hold = mypost('coupon_hold');
@@ -34,20 +34,19 @@ if (isset($_POST['add'])) {
     printf("Error: %s\n", mysqli_error($con));
     exit();
     }
-//$queryÊÇÊý×é
-json_encode($query);
+
 } 
 
 //query the data from database
 if (isset($_POST['search'])) {
     $sql = "select * from user where user_id LIKE '%".$user_id."%'" ;
     $query = mysqli_query($con,$sql);    
-     json_encode($query);
+     
 } 
 else {
     $sql = "select * from user";
     $query = mysqli_query($con,$sql);    
-    json_encode($query);
+
 }
 
 //delete
@@ -61,7 +60,7 @@ if (isset($_POST['delete'])) {
     }
     $sql="select * from user";
     $query = mysqli_query($con,$sql); 
-     json_encode($query);
+   
 }
 
 //update
@@ -76,7 +75,7 @@ if($query2){
     }
     $sql="select * from user";
     $query = mysqli_query($con,$sql); 
-     json_encode($query);
+     
 }
 
 ?>
