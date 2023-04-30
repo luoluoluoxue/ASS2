@@ -1,81 +1,81 @@
 <?php
 
-//open database by mysqli
-$con = mysqli_connect("localhost", "root", "", "can302ass");
-//连接主机 名字root 密码空 database到时候改
-if (mysqli_connect_errno($con)) { 
-    //如果连接失败就显示这句话
-    die("Connect to MySQL failed: " . mysqli_connect_error()); 
+//open database by PDO
+
+$dbms='mysql';     //DBMS type
+$host='localhost'; //Host name
+$dbName='lab2';    //database name
+$user='root';      //database user
+$pass='';          //database password
+$dsn="$dbms:host=$host;dbname=$dbName";
+
+//这里面数据库名字字段啥的都是胡写的 到时候再改
+try {
+    $con = new PDO("mysql:host=localhost; dbname=can302ass","root",""); 
+} catch (PDOException $e) {
+    die ("Error!: " . $e->getMessage() . "<br/>");
 }
 
 //a safe method to recieve post data
-function mypost($str) { //接收数据的方法
+function mypost($str) { 
     $val = !empty($_POST[$str]) ? $_POST[$str] : '';
     return $val;
-
 }       
 
-
-
-
-//receive query parameters.字段 到时候改
+//receive query parameters.
 $user_id = mypost('user_id');
-$user_name = mypost('user_name');
 $coupon_hold = mypost('coupon_hold');
-
 
 //add the received data to database
 if (isset($_POST['add'])) {
-    $sql = "INSERT INTO `user` (`user_id`, `user_name`, `coupon_hold`) 
-    VALUES ( '".$user_id."', '".$user_name."', '".$coupon_hold."')";
-    //$sql = "INSERT INTO `aaa` (`aaa`) VALUES ('".$first."')";
-    $query = mysqli_query($con,$sql);
-    if (!$query) {
-    printf("Error: %s\n", mysqli_error($con));
-    exit();
+    $sql = "INSERT INTO `user` (`user_id`, `coupon_hold`) VALUES (NULL, '".$coupon_hold."');set @auto_id = 0;UPDATE user set user_id = (@auto_id := @auto_id +1);
+    ALTER TABLE user AUTO_INCREMENT = 1; ";
+    $query1=$con->exec($sql);
+     if($query1){
+        echo "add success";
+    }else{
+        echo "Error: add " ;
     }
-
+    $sql="select * from user";
+    $query = $con->query($sql);
 } 
 
 //query the data from database
 if (isset($_POST['search'])) {
-    $sql = "select * from user where user_id LIKE '%".$user_id."%'" ;
-    $query = mysqli_query($con,$sql);    
-     
+    $sql = "SELECT * FROM user WHERE user_id LIKE '%".$user_id."%'";
+    $query = $con->query($sql);
 } 
 else {
-    $sql = "select * from user";
-    $query = mysqli_query($con,$sql);    
-
+    $sql = "SELECT * FROM user";
+    $query = $con->query($sql);
 }
-
 //delete
 if (isset($_POST['delete'])) {
-    $sql = "Delete from user where user_id LIKE '%".$user_id."%'" ;
-    $query1 = mysqli_query($con,$sql); 
-    if($query1){
+     $sql = "Delete from user where user_id = '".$user_id."'; set @auto_id = 0;UPDATE user set user_id = (@auto_id := @auto_id +1);
+    ALTER TABLE user AUTO_INCREMENT = 1;" ;
+     $query1=$con->exec($sql);
+     if($query1){
         echo "delete success";
     }else{
-        echo "Error: " .mysqli_error($con);
+        echo "Error: dele " ;
     }
     $sql="select * from user";
-    $query = mysqli_query($con,$sql); 
-   
-}
+    $query = $con->query($sql);
+} 
 
 //update
 if(isset($_POST['update'])){
-$sql = "update user set user_name='{$user_name}',coupon_hold='{$coupon_hold}' 
+$sql = "update user set coupon_hold='{$coupon_hold}' 
 where user_id={$user_id}" ;
-$query2 = mysqli_query($con,$sql); 
-if($query2){
+$query1 = $con->query($sql);
+if($query1){
         echo "update success";
     }else{
-        echo "Error: " .mysqli_error($con);
+        echo "Error:up " ;
     }
     $sql="select * from user";
-    $query = mysqli_query($con,$sql); 
-     
+    $query = $con->query($sql);
+
 }
 
 ?>
