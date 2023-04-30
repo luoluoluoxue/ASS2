@@ -16,15 +16,18 @@ try {
     die ("Error!: " . $e->getMessage() . "<br/>");
 }
 
+
 //a safe method to recieve post data
 function mypost($str) { 
     $val = !empty($_POST[$str]) ? $_POST[$str] : '';
     return $val;
 }       
 
+//约束大概是 user-coupon coupon_hold(user)--coupon_id(coupon)
 //receive query parameters.
 $user_id = mypost('user_id');
 $coupon_hold = mypost('coupon_hold');
+$c_name=mypost('c_name');
 
 //add the received data to database
 if (isset($_POST['add'])) {
@@ -36,7 +39,7 @@ if (isset($_POST['add'])) {
     }else{
         echo "Error: add " ;
     }
-    $sql="select * from user";
+    $sql = "SELECT *, c_name FROM user, coupon where user.coupon_hold = coupon.`Coupon_id`";
     $query = $con->query($sql);
 } 
 
@@ -46,7 +49,7 @@ if (isset($_POST['search'])) {
     $query = $con->query($sql);
 } 
 else {
-    $sql = "SELECT * FROM user";
+    $sql = "SELECT *, c_name FROM user, coupon where user.coupon_hold = coupon.`Coupon_id`";
     $query = $con->query($sql);
 }
 //delete
@@ -59,7 +62,7 @@ if (isset($_POST['delete'])) {
     }else{
         echo "Error: dele " ;
     }
-    $sql="select * from user";
+    $sql = "SELECT *, c_name FROM user, coupon where user.coupon_hold = coupon.`Coupon_id`";
     $query = $con->query($sql);
 } 
 
@@ -73,7 +76,7 @@ if($query1){
     }else{
         echo "Error:up " ;
     }
-    $sql="select * from user";
+    $sql = "SELECT *, c_name FROM user, coupon where user.coupon_hold = coupon.`Coupon_id`";
     $query = $con->query($sql);
 
 }
