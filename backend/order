@@ -1,0 +1,83 @@
+php
+<?php
+// 连接数据库
+$conn = new mysqli('localhost', 'root', 'password', 'database');
+
+// 接口1:获取订单列表
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['filename'] == 'get-order.php') {
+    $page = $_GET['page'];
+    $limit = $_GET['limit'];
+    $start = ($page - 1) * $limit;
+    $sql = "SELECT * FROM tb_order LIMIT $start, $limit";
+    $result = $conn->query($sql);
+    $orders = [];
+    while ($row = $result->fetch_assoc()) {
+        $orders[] = $row; 
+    }
+    $totalSql = "SELECT COUNT(*) AS total FROM tb_order";
+    $totalResult = $conn->query($totalSql);
+    $total = $totalResult->fetch_assoc()['total'];
+    $res = ['code' => 200, 'data' => ['list' => $orders, 'total' => $total]];
+    echo json_encode($res);
+}
+
+// 接口2:更新订单信息 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['filename'] == 'update-order.php') {
+    $id = $_POST['id'];
+    $time = $_POST['time'];
+    $userId = $_POST['userId'];
+    $address = $_POST['address']; 
+    $status = $_POST['status'];
+    $trackingNumber = $_POST['trackingNumber'];
+    $sql = "UPDATE tb_order 
+            SET time = '$time', user_id = '$userId', shipping_address = '$address', 
+            status = '$status', tracking_number = '$trackingNumber'
+            WHERE id = '$id'";
+    $result = $conn->query($sql);
+    if ($result) {
+        $res = ['code' => 200]; 
+    } else {
+        $res = ['code' => 404];
+    }
+    echo json_encode($res);
+}
+
+// 接口3:获取订单商品列表
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['filename'] == 'get-order-detail.php') {
+    $orderId = $_GET['orderId'];
+    $page = $_GET['page'];
+    $limit = $_GET['limit'];
+    $start = ($page - 1) * $limit;
+    // 获取订单信息
+    $orderSql = "SELECT * FROM tb_order WHERE id = '$orderId'";
+    $orderResult = $conn->query($orderSql);
+    $order = $orderResult->fetch_assoc();
+    
+    // 获取商品列表
+    $itemSql = "SELECT * FROM tb_order_item_sku WHERE order_id = '$orderId' LIMIT $start, $limit";
+    $itemResult = $conn->query($itemSql);
+    $items = [];
+    while ($row = $itemResult->fetch_assoc()) {
+        $items[] = $row; 
+    }
+    
+    // 获取商品总数
+    $totalSql = "SELECT COUNT(*) AS total FROM tb_order_item_sku WHERE order_id = '$orderId'";
+    $totalResult = $conn->query($totalSql);
+    $total = $totalResult->fetch_assoc()['total'];
+    
+    $res = ['code' => 200, 'data' => ['order' => $order, 'list' => $items, 'total' => $total]];
+    echo json_encode($res);
+}
+
+// 接口4:获取含有某商品的订单数目 
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['filename'] == 'get-item-order-number.php') {
+    $itemId = $_GET['itemId'];
+    $sql = "SELECT COUNT(*) AS total FROM tb_order_item_sku WHERE item_id = '$itemId'";
+    $result = $conn->query($sql);
+    $total = $result->fetch_assoc()['total'];
+    $res = ['code' => 200, 'data' => ['total' => $total]];
+    echo json_encode($res);
+}
+
+?>
