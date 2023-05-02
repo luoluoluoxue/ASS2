@@ -68,16 +68,20 @@ class get_order_history
 
         // 返回响应数据
         if ($customer_info && $order_list) {
-            $response_data = [
+            $result['code']=200;
+            $result['message']="success";
+            $data = [
                 'customer' => $customer_info,
                 'list' => $order_list,
                 'total' => $total,
             ];
-            return json(['code' => 200, 'result' => $response_data],200);
+            $result['data']=$data;
+            echo json_encode($result);
         } else {
-            return json(['code' => 404, 'result' => "fail"],404);
+            $result['code']=404;
+            $result['message']="fail";
+            echo json_encode($result);
         }
-
     }
 
 }
