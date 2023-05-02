@@ -34,19 +34,24 @@ class update_customer
         $address = $_POST['address'];
         $payment = $_POST['payment'];
 
-        // SQL，更新 tb_customer_info 表中 id 为 $id 的
+        // 构造 SQL 语句，更新 tb_customer_info 表中 id 为 $id 的记录
         $sql = "SELECT * FROM tb_customer_info WHERE  id=? and user_nickname=? and default_address=? and default_payment_type=?";
         $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute([$id,$name, $address, $payment]);
-        //$order_list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt->execute([$id,$name, $address, $payment]);
+        $order_list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        if ($result) {
+        if (!empty($order_list)) {
             // 更新成功
-            return json(['code' => 200, 'result' =>[]],200);
+            $result['code']=200;
+            $result['message']="success";
+            echo json_encode($result);
         } else {
             // 更新失败
-            return json(['code' => 404, 'result' => 'fail'],404);
+            $result['code']=404;
+            $result['message']="fail";
+            echo json_encode($result);
         }
+
 
     }
 
