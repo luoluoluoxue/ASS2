@@ -48,14 +48,19 @@ class get_customer
             'list' => $list,
             'total' => $total
         ];
-
         // 返回响应数据
         if (isset($list['list']) && isset($list['total']) && !empty($list['list']) && !empty($list['total'])){
-            return json(['code' => 200, 'result' => $list],200);
+            $result['code']=200;
+            $result['message']="success";
+            $data['list']=$list['list'];
+            $data['total']=$total;
+            $result['data']=$data;
+            echo json_encode($result);
         }else{
-            return json(['code' => 404, 'result' => "fail"],404);
+            $result['code']=404;
+            $result['message']="fail";
+            echo json_encode($result);
         }
-
     }
 
 }
