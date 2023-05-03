@@ -1,87 +1,52 @@
 <?php
+//get-customer
+    /**根据分页信息获取用户*/
 
-namespace app\controller;
-
-use pdo\Pdo;
-use think\facade\Config;
-
-class get_order_history
-{
-    /*分页获取某用户的订单历史*/
-    public function index()
-    {
-                 // 创建 PDO 连接
-                //open database by PDO
-        $dbms='sqlite';     //DBMS type
-        $host=''; //Host name
-        $dbName='数据库名字叫啥.db';    //database name
-        $user='';      //database user
-        $pass='';          //database password
-        $dsn="$dbms:$dbName";
+        // 创建 PDO 连接
+        /*$config=Config::get('database')['connections']['mysqlPDO'];
+        $pdo = new \PDO("mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}",$config['user'],$config['password']);*/
 
         try {
-            $con = new PDO($dsn, $user, $pass);
+            $pdo = new PDO("mysql:host=localhost; dbname=ass2","root","");
         } catch (PDOException $e) {
             die ("Error!: " . $e->getMessage() . "<br/>");
         }
-
+        
         // 获取请求参数
-        $customerId = $_GET['customerId'];
-        $page = $_GET['page'];
-        $limit = $_GET['limit'];
+        $page = $_GET['page']; // 默认为第一页
+        $limit = $_GET['limit']; // 默认一次请求 ** 条数据
 
-        // 计算数据库查询语法中的 offset 和 limit 参数
+        // 计算分页偏移量
         $offset = ($page - 1) * $limit;
 
-        // 查询 tb_order 表和 tb_customer_info 表，获取某个用户的订单历史
-        $sql_customer =
-        "SELECT 
-            user_id as id, user_nickname as name, default_address as address, default_payment_type as payment
-        FROM 
-            tb_customer_info 
-        WHERE 
-            id=?";
-        $stmt_customer = $pdo->prepare($sql_customer);
-        $stmt_customer->execute([$customerId]);
-        $customer_info = $stmt_customer->fetch(\PDO::FETCH_ASSOC);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         // 查询当前页的用户信息
-        $stmt_order = $pdo->prepare(
-        'SELECT 
-            id, time, user_id as userId, shipping_address as address, status, tracking_number as trackingNumber
-            FROM 
-                tb_order 
-            WHERE 
-                user_id=:customerId 
-            LIMIT :limit OFFSET :offset');
-        $stmt_order->bindParam(':customerId', $customerId, \PDO::PARAM_INT);
-        $stmt_order->bindParam(':limit', $limit, \PDO::PARAM_INT);
-        $stmt_order->bindParam(':offset', $offset, \PDO::PARAM_INT);
-        $stmt_order->execute();
-        $order_list = $stmt_order->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare('SELECT user_id as id, user_nickname as name, default_address as address, default_payment_type as payment FROM tb_customer_info LIMIT :limit OFFSET :offset');
+        $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        // 查询满足条件的订单数目
-        $sql_total = "SELECT COUNT(*) AS count FROM tb_order WHERE user_id=?";
-        $stmt_total = $pdo->prepare($sql_total);
-        $stmt_total->execute([$customerId]);
-        $total = $stmt_total->fetch(\PDO::FETCH_ASSOC)['count'];
-
+        // 查询 tb_customer_info 表中总条目数
+        $countStmt = $pdo->prepare('SELECT COUNT(*) FROM tb_customer_info');
+        $countStmt->execute();
+        $total = $countStmt->fetchColumn();
+        $list=[
+            'list' => $list,
+            'total' => $total
+        ];
         // 返回响应数据
-        if ($customer_info && $order_list) {
+        if (isset($list['list']) && isset($list['total']) && !empty($list['list']) && !empty($list['total'])){
             $result['code']=200;
             $result['message']="success";
-            $data = [
-                'customer' => $customer_info,
-                'list' => $order_list,
-                'total' => $total,
-            ];
+            $data['list']=$list['list'];
+            $data['total']=$total;
             $result['data']=$data;
             echo json_encode($result);
-        } else {
+        }else{
             $result['code']=404;
             $result['message']="fail";
             echo json_encode($result);
         }
-    }
-
-}
+?>
