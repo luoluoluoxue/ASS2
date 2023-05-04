@@ -1,15 +1,12 @@
 <?php
 
-
-
+//get category on page
 // Connect to database
 
 $host= "localhost";
 $username = 'root';
 $password = '';
 $dbName = "ass2";
-
-
 
 try {
 $conn = new PDO("mysql:host=$host;dbname=$dbName", $username, $password, [
@@ -18,7 +15,7 @@ $conn = new PDO("mysql:host=$host;dbname=$dbName", $username, $password, [
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
 } catch (PDOException $e) {
-      http_response_code(404);
+    http_response_code(404);
     echo json_encode(['error' => 'Failed to connect to database: ' . $e->getMessage()]);
     exit;
 }
@@ -40,7 +37,7 @@ if ($page <= 0 || $limit <= 0) {
 $stmt = $conn->query('SELECT COUNT(*) FROM tb_category');
 $total = $stmt->fetchColumn();
 
-//  offset and limit
+// offset and limit for search
 $offset = ($page - 1) * $limit;
 $stmt = $conn->prepare('SELECT id, name, (SELECT COUNT(*) FROM tb_item WHERE category_id = tb_category.id) AS productNumber FROM tb_category LIMIT :limit OFFSET :offset');
 $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);

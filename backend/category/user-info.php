@@ -7,7 +7,7 @@ $password = '';
 $dbName = 'ass2';
 
 try {
-    $db = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
+    $conn = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
 } catch (PDOException $e) {
     die("Failed to connect to the database: " . $e->getMessage());
 }
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
     $query = "SELECT id, store_nickname AS name, store_description AS description FROM tb_store_info WHERE id = ?";
-    $stmt = $db->prepare($query);
+    $stmt = $conn->prepare($query);
     $stmt->execute([$id]);
 
     $store_info = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,17 +33,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 }
 
 // Interface 3: Update store information
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+if (isset($_POST['name'])&&isset($_POST['description'])&& isset($_POST['id'])) {
     $id = intval($_POST['id']);
     $name = $_POST['name'];
     $description = $_POST['description'];
 
-    $query = "UPDATE tb_store_info SET store_nickname = ?, store_description = ? WHERE id = ?";
-    $stmt = $db->prepare($query);
+   // $query = "UPDATE tb_store_info SET store_nickname = '$name', store_description = '$description' WHERE id = , $id";
+   // $stmt = $conn->prepare($query);
 
-    if ($stmt->execute([$name, $description, $id])) {
+    $query = "UPDATE tb_store_info SET store_nickname = ? , store_description = ? WHERE id = ?";
+    $stmt = $conn->prepare($query);
+
+    if ($stmt->execute([$name,$description,$id])) {
+    header('Content-Type: application/json');
         http_response_code(200);
+        echo json_encode(array('message' => 'update store successfully'));
     } else {
+    header('Content-Type: application/json');
         http_response_code(404);
+        echo json_encode(array('message' => 'update store wrong'));
     }
 }

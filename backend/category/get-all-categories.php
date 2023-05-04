@@ -13,7 +13,7 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$dbName", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-      http_response_code(500);
+    http_response_code(404);
     echo json_encode(['error' => 'Failed to connect to database: ' . $e->getMessage()]);
     exit;
 }
