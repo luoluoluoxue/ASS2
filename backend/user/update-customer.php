@@ -5,7 +5,7 @@
   
         // 创建 PDO 连接
          try {
-            $pdo = new PDO("mysql:host=localhost; dbname=testcostumer","root","");
+            $pdo = new PDO("mysql:host=localhost; dbname=ass2","root","");
         } catch (PDOException $e) {
             die ("Error!: " . $e->getMessage() . "<br/>");
         }
