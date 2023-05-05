@@ -22,7 +22,7 @@
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         // 查询当前页的用户信息
-        $stmt = $pdo->prepare('SELECT user_id as id, user_nickname as name, default_address as address, default_payment_type as payment FROM tb_customer_info LIMIT :limit OFFSET :offset');
+        $stmt = $pdo->prepare('SELECT id as id, user_nickname as name, default_address as address, default_payment_type as payment FROM tb_customer_info LIMIT :limit OFFSET :offset');
         $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
         $stmt->execute();
