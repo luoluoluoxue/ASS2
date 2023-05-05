@@ -1,0 +1,325 @@
+// JavaScript source code
+/**
+ * Class for product database using MySQL
+ * 
+ * @package OnlineStore
+ * @version 1.0
+ */
+class ProductDatabaseMySQL implements ProductDatabase {
+
+    // Database connection
+    private $conn;
+
+    // Constructor
+    public function __construct($host, $user, $pass, $db) {
+        // Create a new connection
+        $this -> conn = new mysqli($host, $user, $pass, $db);
+
+        // Check for errors
+        if ($this -> conn -> connect_error) {
+            die("Connection failed: ".$this -> conn -> connect_error);
+        }
+    }
+
+    // Destructor
+    public function __destruct() {
+        // Close the connection
+        $this -> conn -> close();
+    }
+
+    // Get product by ID
+    public function getProductByID($productID) {
+        // Prepare a SQL statement
+        $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE productID = ?");
+
+        // Bind the parameter
+        $stmt -> bind_param("i", $productID);
+
+        // Execute the statement
+        $stmt -> execute();
+
+        // Get the result
+        $result = $stmt -> get_result();
+
+        // Fetch the data as an associative array
+        $data = $result -> fetch_assoc();
+
+        // Free the result
+        $result -> free();
+
+        // Close the statement
+        $stmt -> close();
+
+        // Return the data or null if not found
+        return $data ? $data : null;
+    }
+
+    // Get products by category ID
+    public function getProductsByCategoryID($categoryID) {
+        // Prepare a SQL statement
+        $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE categoryID = ?");
+
+        // Bind the parameter
+        $stmt -> bind_param("i", $categoryID);
+
+        // Execute the statement
+        $stmt -> execute();
+
+        // Get the result
+        $result = $stmt -> get_result();
+
+        // Fetch all the data as an array of associative arrays
+        $data = $result -> fetch_all(MYSQLI_ASSOC);
+
+        // Free the result
+        $result -> free();
+
+        // Close the statement
+        $stmt -> close();
+
+        // Return the data or an empty array if not found
+        return $data ? $data : [];
+    }
+
+    // Add a new product to the database
+    public function addProduct($productName, $categoryID, $productQuantity, $productPrice, $productDescription, $imageLink) {
+
+        /**
+         * Class for product database using MySQL
+         * 
+         * @package OnlineStore
+         * @version 1.0
+         */
+        class ProductDatabaseMySQL implements ProductDatabase {
+
+            // Database connection
+            private $conn;
+
+            // Constructor
+            public function __construct($host, $user, $pass, $db) {
+                // Create a new connection
+                $this -> conn = new mysqli($host, $user, $pass, $db);
+
+                // Check for errors
+                if ($this -> conn -> connect_error) {
+                    die("Connection failed: ".$this -> conn -> connect_error);
+                }
+            }
+
+            // Destructor
+            public function __destruct() {
+                // Close the connection
+                $this -> conn -> close();
+            }
+
+            // Get product by ID
+            public function getProductByID($productID) {
+                // Prepare a SQL statement
+                $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE productID = ?");
+
+                // Bind the parameter
+                $stmt -> bind_param("i", $productID);
+
+                // Execute the statement
+                $stmt -> execute();
+
+                // Get the result
+                $result = $stmt -> get_result();
+
+                // Fetch the data as an associative array
+                $data = $result -> fetch_assoc();
+
+                // Free the result
+                $result -> free();
+
+                // Close the statement
+                $stmt -> close();
+
+                // Return the data or null if not found
+                return $data ? $data : null;
+            }
+
+            // Get products by category ID
+            public function getProductsByCategoryID($categoryID) {
+                // Prepare a SQL statement
+                $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE categoryID = ?");
+
+                // Bind the parameter
+                $stmt -> bind_param("i", $categoryID);
+
+                // Execute the statement
+                $stmt -> execute();
+
+                // Get the result
+                $result = $stmt -> get_result();
+
+                // Fetch all the data as an array of associative arrays
+                $data = $result -> fetch_all(MYSQLI_ASSOC);
+
+                // Free the result
+                $result -> free();
+
+                // Close the statement
+                $stmt -> close();
+
+                // Return the data or an empty array if not found
+               class ProductDatabaseMySQL implements ProductDatabase {
+
+    // Database connection
+    private $conn;
+
+    // Constructor
+    public function __construct($host, $user, $pass, $db) {
+        // Create a new connection
+        $this -> conn = new mysqli($host, $user, $pass, $db);
+
+        // Check for errors
+        if ($this -> conn -> connect_error) {
+            die("Connection failed: ".$this -> conn -> connect_error);
+        }
+    }
+
+    // Destructor
+    public function __destruct() {
+        // Close the connection
+        $this -> conn -> close();
+    }
+
+    // Get product by ID
+    public function getProductByID($productID) {
+        // Prepare a SQL statement
+        $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE productID = ?");
+
+        // Bind the parameter
+        $stmt -> bind_param("i", $productID);
+
+        // Execute the statement
+        $stmt -> execute();
+
+        // Get the result
+        $result = $stmt -> get_result();
+
+        // Fetch the data as an associative array
+        $data = $result -> fetch_assoc();
+
+        // Free the result
+        $result -> free();
+
+        // Close the statement
+        $stmt -> close();
+
+        // Return the data or null if not found
+        return $data ? $data : null;
+    }
+
+    // Get products by category ID
+    public function getProductsByCategoryID($categoryID) {
+        // Prepare a SQL statement
+        $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE categoryID = ?");
+
+        // Bind the parameter
+        $stmt -> bind_param("i", $categoryID);
+
+        // Execute the statement
+        $stmt -> execute();
+
+        // Get the result
+        $result = $stmt -> get_result();
+
+        // Fetch all the data as an array of associative arrays
+        $data = $result -> fetch_all(MYSQLI_ASSOC);
+
+        // Free the result
+        $result -> free();
+
+        // Close the statement
+        $stmt -> close();
+
+        // Return the data or an empty array if not found
+        return $data ? $data : [];
+    }
+
+    // Add a new product to the database
+    public function addProduct($productName, $categoryID, $productQuantity, $productPrice, $productDescription, $imageLink) {
+
+        /**
+         * Class for product database using MySQL
+         * 
+         * @package OnlineStore
+         * @version 1.0
+         */
+        class ProductDatabaseMySQL implements ProductDatabase {
+
+            // Database connection
+            private $conn;
+
+            // Constructor
+            public function __construct($host, $user, $pass, $db) {
+                // Create a new connection
+                $this -> conn = new mysqli($host, $user, $pass, $db);
+
+                // Check for errors
+                if ($this -> conn -> connect_error) {
+                    die("Connection failed: ".$this -> conn -> connect_error);
+                }
+            }
+
+            // Destructor
+            public function __destruct() {
+                // Close the connection
+                $this -> conn -> close();
+            }
+
+            // Get product by ID
+            public function getProductByID($productID) {
+                // Prepare a SQL statement
+                $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE productID = ?");
+
+                // Bind the parameter
+                $stmt -> bind_param("i", $productID);
+
+                // Execute the statement
+                $stmt -> execute();
+
+                // Get the result
+                $result = $stmt -> get_result();
+
+                // Fetch the data as an associative array
+                $data = $result -> fetch_assoc();
+
+                // Free the result
+                $result -> free();
+
+                // Close the statement
+                $stmt -> close();
+
+                // Return the data or null if not found
+                return $data ? $data : null;
+            }
+
+            // Get products by category ID
+            public function getProductsByCategoryID($categoryID) {
+                // Prepare a SQL statement
+                $stmt = $this -> conn -> prepare("SELECT * FROM products WHERE categoryID = ?");
+
+                // Bind the parameter
+                $stmt -> bind_param("i", $categoryID);
+
+                // Execute the statement
+                $stmt -> execute();
+
+                // Get the result
+                $result = $stmt -> get_result();
+
+                // Fetch all the data as an array of associative arrays
+                $data = $result -> fetch_all(MYSQLI_ASSOC);
+
+                // Free the result
+                $result -> free();
+
+                // Close the statement
+                $stmt -> close();
+
+                // Return the data or an empty array if not found
+                return $data ? $data : [];
+            }
